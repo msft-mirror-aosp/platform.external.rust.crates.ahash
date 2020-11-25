@@ -8,8 +8,8 @@ rust_library {
     edition: "2018",
     features: [
         "default",
-        "getrandom",
-        "lazy_static",
+        "runtime-rng",
+        "specialize",
         "std",
     ],
     rustlibs: [
@@ -23,3 +23,4 @@ rust_library {
 //   getrandom-0.2.0
 //   lazy_static-1.4.0
 //   libc-0.2.80 "default,std"
+//   version_check-0.9.2
