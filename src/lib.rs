@@ -29,7 +29,7 @@
 #![deny(clippy::correctness, clippy::complexity, clippy::perf)]
 #![allow(clippy::pedantic, clippy::cast_lossless, clippy::unreadable_literal)]
 #![cfg_attr(all(not(test), not(feature = "std")), no_std)]
-#![cfg_attr(feature = "specialize", feature(specialization))]
+#![cfg_attr(feature = "specialize", feature(min_specialization))]
 
 #[macro_use]
 mod convert;
@@ -128,13 +128,17 @@ pub(crate) trait HasherExt: Hasher {
 impl<T: Hasher> HasherExt for T {
     #[inline]
     #[cfg(feature = "specialize")]
-    default fn hash_u64(self, value: u64) -> u64 {
-        value.get_hash(self)
+    default fn hash_u64(mut self, value: u64) -> u64 {
+        use core::hash::Hash;
+        value.hash(&mut self);
+        self.finish()
     }
     #[inline]
     #[cfg(not(feature = "specialize"))]
-    fn hash_u64(self, value: u64) -> u64 {
-        value.get_hash(self)
+    fn hash_u64(mut self, value: u64) -> u64 {
+        use core::hash::Hash;
+        value.hash(&mut self);
+        self.finish()
     }
     #[inline]
     #[cfg(feature = "specialize")]
