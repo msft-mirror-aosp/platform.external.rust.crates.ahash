@@ -1,16 +1,16 @@
-#[cfg(feature = "std")]
+#[cfg(all(feature = "runtime-rng", not(all(feature = "compile-time-rng", test))))]
 use crate::convert::Convert;
 use crate::{AHasher};
-#[cfg(all(not(feature = "std"), feature = "compile-time-rng"))]
+#[cfg(all(feature = "compile-time-rng", any(not(feature = "runtime-rng"), test)))]
 use const_random::const_random;
 use core::fmt;
 use core::hash::BuildHasher;
 use core::hash::Hasher;
-#[cfg(feature = "std")]
+#[cfg(all(feature = "runtime-rng", not(all(feature = "compile-time-rng", test))))]
 use lazy_static::*;
 use core::sync::atomic::{AtomicUsize, Ordering};
 
-#[cfg(feature = "std")]
+#[cfg(all(feature = "runtime-rng", not(all(feature = "compile-time-rng", test))))]
 lazy_static! {
     static ref SEEDS: [[u64; 4]; 2] = {
         let mut result: [u8; 64] = [0; 64];
@@ -28,7 +28,7 @@ pub(crate) const PI: [u64; 4] = [
     0x082e_fa98_ec4e_6c89,
 ];
 
-#[cfg(all(not(feature = "std"), not(feature = "compile-time-rng")))]
+#[cfg(all(not(feature = "runtime-rng"), not(feature = "compile-time-rng")))]
 const PI2: [u64; 4] = [
     0x4528_21e6_38d0_1377,
     0xbe54_66cf_34e9_0c6c,
@@ -38,11 +38,11 @@ const PI2: [u64; 4] = [
 
 #[inline]
 pub(crate) fn seeds() -> [u64; 4] {
-    #[cfg(feature = "std")]
+    #[cfg(all(feature = "runtime-rng", not(all(feature = "compile-time-rng", test))))]
     { SEEDS[1] }
-    #[cfg(all(not(feature = "std"), feature = "compile-time-rng"))]
+    #[cfg(all(feature = "compile-time-rng", any(not(feature = "runtime-rng"), test)))]
     { [const_random!(u64), const_random!(u64), const_random!(u64), const_random!(u64)] }
-    #[cfg(all(not(feature = "std"), not(feature = "compile-time-rng")))]
+    #[cfg(all(not(feature = "runtime-rng"), not(feature = "compile-time-rng")))]
     { PI }
 }
 
@@ -72,19 +72,19 @@ impl RandomState {
     /// Use randomly generated keys
     #[inline]
     pub fn new() -> RandomState {
-        #[cfg(feature = "std")]
+        #[cfg(all(feature = "runtime-rng", not(all(feature = "compile-time-rng", test))))]
         {
             let seeds = *SEEDS;
             RandomState::from_keys(seeds[0], seeds[1])
         }
-        #[cfg(all(not(feature = "std"), feature = "compile-time-rng"))]
+        #[cfg(all(feature = "compile-time-rng", any(not(feature = "runtime-rng"), test)))]
         {
             RandomState::from_keys(
                 [const_random!(u64), const_random!(u64), const_random!(u64), const_random!(u64)],
                 [const_random!(u64), const_random!(u64), const_random!(u64), const_random!(u64)],
             )
         }
-        #[cfg(all(not(feature = "std"), not(feature = "compile-time-rng")))]
+        #[cfg(all(not(feature = "runtime-rng"), not(feature = "compile-time-rng")))]
         {
             RandomState::from_keys(PI, PI2)
         }
@@ -113,7 +113,7 @@ impl RandomState {
             COUNTER.store(new, Ordering::Relaxed);
             hasher.write_usize(new);
         }
-        #[cfg(all(not(feature = "std"), not(feature = "compile-time-rng")))]
+        #[cfg(all(not(feature = "runtime-rng"), not(feature = "compile-time-rng")))]
         hasher.write_usize(&PI as *const _ as usize);
         let mix = |k: u64| {
             let mut h = hasher.clone();
@@ -191,6 +191,24 @@ mod test {
         let a = RandomState::new();
         let b = RandomState::new();
         assert_ne!(a.build_hasher().finish(), b.build_hasher().finish());
+    }
+
+    #[cfg(all(feature = "runtime-rng", not(all(feature = "compile-time-rng", test))))]
+    #[test]
+    fn test_not_pi() {
+        assert_ne!(PI, seeds());
+    }
+
+    #[cfg(all(feature = "compile-time-rng", any(not(feature = "runtime-rng"), test)))]
+    #[test]
+    fn test_not_pi_const() {
+        assert_ne!(PI, seeds());
+    }
+
+    #[cfg(all(not(feature = "runtime-rng"), not(feature = "compile-time-rng")))]
+    #[test]
+    fn test_pi() {
+        assert_eq!(PI, seeds());
     }
 
     #[test]
