@@ -46,16 +46,24 @@ jobs:
             toolchain: nightly
             override: true
             components: clippy
-      - name: check specialize
+      - name: check nightly
         uses: actions-rs/cargo@v1
         with:
           command: check
-          args: --features specialize
-      - name: test specialize
+      - name: test nightly
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --features specialize
+      - name: check serde
+        uses: actions-rs/cargo@v1
+        with:
+          command: check
+          args: --features serde
+      - name: test serde
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --features serde
   linux_arm7:
     name: Linux ARMv7
     runs-on: ubuntu-latest
@@ -87,7 +95,7 @@ jobs:
           command: build
           args: --target i686-unknown-linux-gnu
   x86_64-unknown-linux-gnu:
-    name: Linux x86_64 - specialize
+    name: Linux x86_64 - nightly
     runs-on: ubuntu-latest
     env:
         RUSTFLAGS: -C target-feature=+aes
@@ -102,7 +110,7 @@ jobs:
         with:
           use-cross: true
           command: build
-          args: --target x86_64-unknown-linux-gnu --features specialize
+          args: --target x86_64-unknown-linux-gnu
   thumbv6m:
     name: thumbv6m
     runs-on: ubuntu-latest
@@ -118,3 +126,18 @@ jobs:
           use-cross: true
           command: check
           args: --target thumbv6m-none-eabi --no-default-features
+  wasm32-unknown-unknown:
+    name: wasm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: wasm32-unknown-unknown
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: check
+          args: --target wasm32-unknown-unknown
