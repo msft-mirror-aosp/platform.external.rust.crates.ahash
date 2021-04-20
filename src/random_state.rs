@@ -11,10 +11,21 @@ use lazy_static::*;
 use core::sync::atomic::{AtomicUsize, Ordering};
 
 #[cfg(all(feature = "runtime-rng", not(all(feature = "compile-time-rng", test))))]
+fn read_urandom(dest: &mut [u8]) -> Result<(), std::io::Error> {
+    use std::fs::File;
+    use std::io::Read;
+
+    let mut f = File::open("/dev/urandom")?;
+    f.read_exact(dest)
+}
+
+#[cfg(all(feature = "runtime-rng", not(all(feature = "compile-time-rng", test))))]
 lazy_static! {
     static ref SEEDS: [[u64; 4]; 2] = {
         let mut result: [u8; 64] = [0; 64];
-        getrandom::getrandom(&mut result).expect("getrandom::getrandom() failed.");
+        if read_urandom(&mut result).is_err() {
+            getrandom::getrandom(&mut result).expect("getrandom::getrandom() failed.")
+        }
         result.convert()
     };
 }
