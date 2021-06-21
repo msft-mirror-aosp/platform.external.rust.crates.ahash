@@ -13,7 +13,7 @@
 [package]
 edition = "2018"
 name = "ahash"
-version = "0.7.2"
+version = "0.7.4"
 authors = ["Tom Kaitchuck <Tom.Kaitchuck@gmail.com>"]
 build = "./build.rs"
 exclude = ["/smhasher"]
