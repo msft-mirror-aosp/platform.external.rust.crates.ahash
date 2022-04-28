@@ -17,12 +17,12 @@ Bug: 185934601
 Change-Id: Ie81a1f3a893d578348db11aee114d1a8f2d9fac5
 ---
 diff --git a/src/random_state.rs b/src/random_state.rs
-index f394cd0..d8280b7 100644
+index c3628bf..835467c 100644
 --- a/src/random_state.rs
 +++ b/src/random_state.rs
-@@ -34,6 +34,15 @@ use crate::aes_hash::*;
- #[cfg(not(all(any(target_arch = "x86", target_arch = "x86_64"), target_feature = "aes", not(miri))))]
- use crate::fallback_hash::*;
+@@ -48,6 +48,15 @@ use crate::fallback_hash::*;
+ #[cfg(not(all(target_arch = "arm", target_os = "none")))]
+ static RAND_SOURCE: OnceBox<Box<dyn RandomSource + Send + Sync>> = OnceBox::new();
  
 +#[cfg(all(feature = "runtime-rng", not(all(feature = "compile-time-rng", test))))]
 +fn read_urandom(dest: &mut [u8]) -> Result<(), std::io::Error> {
@@ -33,28 +33,17 @@ index f394cd0..d8280b7 100644
 +    f.read_exact(dest)
 +}
 +
- #[cfg(all(feature = "runtime-rng", not(all(feature = "compile-time-rng", test))))]
- static SEEDS: OnceBox<[[u64; 4]; 2]> = OnceBox::new();
+ /// A supplier of Randomness used for different hashers.
+ /// See [RandomState.set_random_source].
+ pub trait RandomSource {
+@@ -98,7 +107,9 @@ impl RandomSource for DefaultRandomSource {
  
-@@ -59,7 +68,9 @@ pub(crate) fn seeds() -> [u64; 4] {
-     {
          SEEDS.get_or_init(|| {
              let mut result: [u8; 64] = [0; 64];
 -            getrandom::getrandom(&mut result).expect("getrandom::getrandom() failed.");
 +            if read_urandom(&mut result).is_err() {
-+                getrandom::getrandom(&mut result).expect("getrandom::getrandom() failed.")
++                getrandom::getrandom(&mut result).expect("getrandom::getrandom() failed.");
 +            }
              Box::new(result.convert())
-         })[1]
+         })
      }
-@@ -107,7 +118,9 @@ impl RandomState {
-         {
-             let seeds = SEEDS.get_or_init(|| {
-                 let mut result: [u8; 64] = [0; 64];
--                getrandom::getrandom(&mut result).expect("getrandom::getrandom() failed.");
-+                if read_urandom(&mut result).is_err() {
-+                    getrandom::getrandom(&mut result).expect("getrandom::getrandom() failed.")
-+                }
-                 Box::new(result.convert())
-             });
-             RandomState::from_keys(seeds[0], seeds[1])
