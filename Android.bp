@@ -43,7 +43,7 @@ rust_library {
     host_supported: true,
     crate_name: "ahash",
     cargo_env_compat: true,
-    cargo_pkg_version: "0.7.6",
+    cargo_pkg_version: "0.8.2",
     srcs: ["src/lib.rs"],
     edition: "2018",
     arch: {
@@ -56,10 +56,14 @@ rust_library {
     },
     features: [
         "default",
+        "getrandom",
         "runtime-rng",
+        "specialize",
         "std",
+        "stdsimd",
     ],
     rustlibs: [
+        "libcfg_if",
         "libgetrandom",
         "libonce_cell",
     ],
