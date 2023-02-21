@@ -39,11 +39,10 @@ license {
 
 rust_library {
     name: "libahash",
-    // has rustc warnings
     host_supported: true,
     crate_name: "ahash",
     cargo_env_compat: true,
-    cargo_pkg_version: "0.8.2",
+    cargo_pkg_version: "0.8.3",
     srcs: ["src/lib.rs"],
     edition: "2018",
     arch: {
