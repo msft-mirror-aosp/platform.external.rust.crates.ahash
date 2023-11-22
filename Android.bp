@@ -57,7 +57,9 @@ rust_library {
         "default",
         "getrandom",
         "runtime-rng",
+        "specialize",
         "std",
+        "stdsimd",
     ],
     rustlibs: [
         "libcfg_if",
