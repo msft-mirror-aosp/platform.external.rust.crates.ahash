@@ -5,19 +5,19 @@
 name: "ahash"
 description: "A non-cryptographic hash function using AES-NI for high performance"
 third_party {
-  url {
-    type: HOMEPAGE
-    value: "https://crates.io/crates/ahash"
-  }
-  url {
-    type: ARCHIVE
-    value: "https://static.crates.io/crates/ahash/ahash-0.8.5.crate"
-  }
-  version: "0.8.5"
   license_type: NOTICE
   last_upgrade_date {
     year: 2023
-    month: 10
+    month: 11
     day: 24
+  }
+  identifier {
+    type: "HOMEPAGE"
+    value: "https://crates.io/crates/ahash"
+  }
+  identifier {
+    type: "ARCHIVE"
+    value: "https://static.crates.io/crates/ahash/ahash-0.8.6.crate"
+    version: "0.8.6"
   }
 }
