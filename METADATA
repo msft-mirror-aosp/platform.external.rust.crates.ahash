@@ -11,13 +11,10 @@ third_party {
     month: 11
     day: 24
   }
-  url {
-    type: HOMEPAGE
-    value: "https://crates.io/crates/ahash"
-  }
-  url {
-    type: ARCHIVE
+  homepage: "https://crates.io/crates/ahash"
+  identifier {
+    type: "Archive"
     value: "https://static.crates.io/crates/ahash/ahash-0.8.6.crate"
+    version: "0.8.6"
   }
-  version: "0.8.6"
 }
