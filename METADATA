@@ -12,6 +12,7 @@ third_party {
     day: 24
   }
   homepage: "https://crates.io/crates/ahash"
+  version: "0.8.6"
   identifier {
     type: "Archive"
     value: "https://static.crates.io/crates/ahash/ahash-0.8.6.crate"
