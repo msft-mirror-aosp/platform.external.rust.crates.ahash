@@ -1,5 +1,5 @@
 # This project was upgraded with external_updater.
-# Usage: tools/external_updater/updater.sh update rust/crates/ahash
+# Usage: tools/external_updater/updater.sh update external/rust/crates/ahash
 # For more info, check https://cs.android.com/android/platform/superproject/+/main:tools/external_updater/README.md
 
 name: "ahash"
@@ -7,15 +7,14 @@ description: "A non-cryptographic hash function using AES-NI for high performanc
 third_party {
   license_type: NOTICE
   last_upgrade_date {
-    year: 2023
-    month: 11
-    day: 24
+    year: 2024
+    month: 1
+    day: 31
   }
   homepage: "https://crates.io/crates/ahash"
-  version: "0.8.6"
   identifier {
     type: "Archive"
-    value: "https://static.crates.io/crates/ahash/ahash-0.8.6.crate"
-    version: "0.8.6"
+    value: "https://static.crates.io/crates/ahash/ahash-0.8.7.crate"
+    version: "0.8.7"
   }
 }
