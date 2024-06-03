@@ -8,13 +8,13 @@ third_party {
   license_type: NOTICE
   last_upgrade_date {
     year: 2024
-    month: 1
-    day: 31
+    month: 4
+    day: 16
   }
   homepage: "https://crates.io/crates/ahash"
   identifier {
     type: "Archive"
-    value: "https://static.crates.io/crates/ahash/ahash-0.8.7.crate"
-    version: "0.8.7"
+    value: "https://static.crates.io/crates/ahash/ahash-0.8.11.crate"
+    version: "0.8.11"
   }
 }
