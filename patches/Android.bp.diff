@@ -1,10 +1,17 @@
 diff --git a/Android.bp b/Android.bp
-index f33ba7a..62b8b27 100644
+index 745d2e8..8e44ff7 100644
 --- a/Android.bp
 +++ b/Android.bp
-@@ -46,9 +46,16 @@ rust_library {
-     cargo_pkg_version: "0.8.2",
-     srcs: ["src/lib.rs"],
+@@ -40,23 +40,30 @@ license {
+ }
+ 
+ rust_library {
+     name: "libahash",
+     host_supported: true,
+     crate_name: "ahash",
+     cargo_env_compat: true,
+     cargo_pkg_version: "0.8.11",
+     crate_root: "src/lib.rs",
      edition: "2018",
 +    arch: {
 +        arm64: {
@@ -20,3 +27,10 @@ index f33ba7a..62b8b27 100644
          "getrandom",
          "runtime-rng",
          "specialize",
+         "std",
+     ],
+     rustlibs: [
+         "libcfg_if",
+         "libgetrandom",
+         "libonce_cell",
+         "libzerocopy",
