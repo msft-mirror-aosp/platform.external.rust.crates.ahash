@@ -1,7 +1,0 @@
-{
-  "package": {
-    "ahash": {
-      "patch": "patches/Android.bp.diff"
-    }
-  }
-}
